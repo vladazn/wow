@@ -1,0 +1,180 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "github.com/vladazn/wow",
+    "version": "1.0"
+  },
+  "tags": [
+    {
+      "name": "Wow"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/challenge": {
+      "get": {
+        "operationId": "Wow_GetChallenge",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/wowChallengeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Wow"
+        ]
+      }
+    },
+    "/wisdom": {
+      "get": {
+        "operationId": "Wow_GetWisdom",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/wowWisdomResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "key",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "check",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "nonce",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "Wow"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "wowChallenge": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "check": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "wowChallengeResponse": {
+      "type": "object",
+      "properties": {
+        "response": {
+          "$ref": "#/definitions/wowChallenge"
+        },
+        "err": {
+          "$ref": "#/definitions/wowError"
+        }
+      }
+    },
+    "wowError": {
+      "type": "object",
+      "properties": {
+        "msg": {
+          "type": "string"
+        }
+      }
+    },
+    "wowWisdom": {
+      "type": "object",
+      "properties": {
+        "quote": {
+          "type": "string"
+        }
+      }
+    },
+    "wowWisdomResponse": {
+      "type": "object",
+      "properties": {
+        "response": {
+          "$ref": "#/definitions/wowWisdom"
+        },
+        "err": {
+          "$ref": "#/definitions/wowError"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "nauth": {
+      "type": "apiKey",
+      "name": "auth",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "nauth": []
+    }
+  ]
+}

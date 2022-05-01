@@ -1,0 +1,80 @@
+syntax = "proto3";
+package wow;
+option go_package = "github.com/vladazn/wow/protos/gen/go/proto/wow";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "github.com/vladazn/wow"
+    version: "1.0"
+  }
+  schemes: HTTP
+  consumes: "application/json"
+  produces: "application/json"
+  security_definitions: {
+    security: {
+      key: "nauth"
+      value: {
+        type: TYPE_API_KEY
+        in: IN_HEADER
+        name: "auth"
+      }
+    }
+  }
+  security: {
+    security_requirement: {
+      key: "nauth"
+    }
+  }
+};
+
+service Wow {
+  rpc GetChallenge(Empty) returns (ChallengeResponse) {
+    option (google.api.http) = {
+      get: "/challenge"
+    };
+  }
+
+  rpc GetWisdom(WisdomRequest) returns (WisdomResponse) {
+    option (google.api.http) = {
+      get: "/wisdom"
+    };
+  }
+}
+
+message Empty {
+}
+
+message ChallengeResponse {
+  Challenge response = 1;
+  Error err = 2;
+}
+
+message Challenge {
+  string key = 1;
+  int32 check = 2;
+}
+
+message WisdomRequest {
+  string key = 1;
+  int32 check = 2;
+  int32 nonce = 3;
+}
+
+message WisdomResponse {
+  Wisdom response = 1;
+  Error err = 2;
+}
+
+
+message Wisdom {
+  string quote = 1;
+}
+
+message Error {
+  string msg = 1;
+}

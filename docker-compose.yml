@@ -1,0 +1,42 @@
+version: "3.3"
+services:
+  client:
+    networks:
+      - wow.net
+    restart: always
+    image: vladazn/wow/client:test
+    depends_on:
+      - server
+    environment:
+      - CLIENT_HOST=http://server:8080
+  server:
+    networks:
+      - wow.net
+    restart: always
+    image: vladazn/wow/server:test
+    ports:
+      - "8088:8080"
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+  swagger:
+    networks:
+      - wow.net
+    restart: always
+    image: vladazn/wow/swagger:test
+    environment:
+      - HOST=localhost:8088
+    ports:
+      - "8080:8080"
+    depends_on:
+      - server
+  redis:
+    networks:
+      - wow.net
+    image: redis
+    entrypoint:
+      - /usr/local/bin/redis-server
+networks:
+  wow.net:
+    driver: bridge

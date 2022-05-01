@@ -1,0 +1,23 @@
+FROM golang:1.16-alpine as builder
+
+WORKDIR /app
+
+COPY ./cmd ./cmd
+COPY ./internal ./internal
+COPY ./config ./config
+COPY ./proto ./proto
+COPY ./go.mod ./go.mod
+COPY ./go.sum ./go.sum
+
+
+RUN go mod download
+
+RUN go build ./cmd/client/main.go
+
+FROM alpine:3.14
+
+WORKDIR /app/
+COPY --from=builder /app/main ./
+COPY --from=builder /app/config/config.yml ./config/config.yml
+
+ENTRYPOINT /app/main
